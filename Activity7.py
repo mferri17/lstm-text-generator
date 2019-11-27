@@ -211,10 +211,13 @@ print('\n\n --- TRAINING --- \n')
 session = tf.Session()
 session.run(tf.global_variables_initializer())
 
+batches_number = np.shape(data_X)[0]
+losses = np.zeros((n_epochs, batches_number))
+
 for e in range(1, n_epochs + 1):
   cs = session.run(init_state, {X_int: data_X[0], Y_int: data_Y[0]}) # initial state
   
-  for b in range(np.shape(data_X)[0]):
+  for b in range(batches_number):
     c_input = data_X[b]
     c_target = data_Y[b]
     ls = list([np.shape(c_input)[1]] * np.shape(c_input)[0])
@@ -225,6 +228,40 @@ for e in range(1, n_epochs + 1):
             current_state.h: cs.h}
     l, _, cs = session.run([loss, train, final_state], feed)
     print(f'Epoch {e}, Batch {b}. \t Loss: {l}')
+    losses[e-1][b] = l # saving losses
+
+# --------------------------------
+
+### Loss plot
+import matplotlib
+import matplotlib.pyplot as plt
+
+print('losses shape', np.shape(losses))
+
+colors = ['#616BB0', '#74C49D', '#FFFF00', '#B02956', '#B3BAFF']
+
+# Total loss
+ys = losses.reshape(-1)
+xs = np.arange(len(ys))
+plt.plot(xs, ys, '-', c=colors[0], label='training loss over all epochs')
+plt.legend()
+plt.show()
+
+# By epochs
+for e in range(len(losses)):
+  ys_e = losses[e]
+  xs_e = np.arange(len(ys_e))
+  plt.plot(xs_e, ys_e, '-', c=colors[0], label=f'training loss (epoch {e+1})')
+  plt.legend()
+  plt.show()
+
+# By epochs all together
+for e in range(len(losses)):
+  ys_e = losses[e]
+  xs_e = np.arange(len(ys_e))
+  plt.plot(xs_e, ys_e, '-', c=colors[e], label=f'training loss (epoch {e+1})')
+plt.legend()
+plt.show()
 
 # --------------------------------
 
