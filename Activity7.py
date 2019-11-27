@@ -231,7 +231,7 @@ for e in range(1, n_epochs + 1):
 ### Model saving
 
 saver = tf.train.Saver()
-saver.save(session, 'drive/My Drive/_ USI/Deep Learning Lab/models/Activity7Model_1.ckpt')
+saver.save(session, 'models/Activity7Model_1.ckpt')
 
 # --------------------------------
 
@@ -266,7 +266,7 @@ for n in range(20):
 saver = tf.train.Saver()
 
 with tf.Session() as sess:
-  saver.restore(sess, 'drive/My Drive/_ USI/Deep Learning Lab/models/Activity7Model_1.ckpt')
+  saver.restore(sess, 'models/Activity7Model_1.ckpt')
   print('Model restored.')
 
   ri = random.randrange(sum(char_counts.values()))
